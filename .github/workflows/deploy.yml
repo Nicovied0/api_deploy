@@ -13,6 +13,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set up JDK 17 (OpenJDK)
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+
+    - name: Build project with Maven
+      run: |
+        mvn clean package
+
     - name: Set up SSH key
       run: |
         mkdir -p ~/.ssh
@@ -34,6 +43,9 @@ jobs:
 
           # Obtener la última versión del repositorio
           git pull origin main;
+
+          # Copiar el archivo JAR al servidor
+          cp /path/to/your/project/target/demo-0.0.1-SNAPSHOT.jar /home/root/mis-proyectos/mi-app/target/;
 
           # Construir las imágenes de Docker localmente
           docker-compose build;
