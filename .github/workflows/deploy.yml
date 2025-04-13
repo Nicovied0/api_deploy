@@ -21,8 +21,8 @@ jobs:
 
     - name: Add known hosts
       run: |
-        ssh-keyscan -H tu.vps.ip >> ~/.ssh/known_hosts
+        ssh-keyscan -H 149.50.146.48 >> ~/.ssh/known_hosts
 
     - name: Deploy via SSH
       run: |
-        ssh -i ~/.ssh/id_rsa usuario@tu.vps.ip "cd /ruta/proyecto && git pull && docker-compose up -d"
+        ssh -i ~/.ssh/id_rsa root@149.50.146.48 "cd /home/root/mis-proyectos/mi-app && git pull && docker-compose up -d"
