@@ -1,30 +1,31 @@
 version: '3.8'
 
 services:
-  # Servicio web (Nginx)
+  # Servicio de la API
+  api:
+    build:
+      context: ./api  # El contexto de construcción es el directorio ./api
+    container_name: api
+    ports:
+      - "5000:5000"
+    environment:
+      - API_ENV=production
+    networks:
+      - app_network
+
+  # Servicio de Nginx
   web:
     image: nginx:latest
     container_name: web
     ports:
-      - "80:80"  # Mapea el puerto 80 del contenedor al puerto 80 de la máquina host
+      - "80:80"
     volumes:
-      - ./web:/usr/share/nginx/html  # Monta el contenido estático de tu aplicación en Nginx
-      - ./nginx.conf:/etc/nginx/nginx.conf  # Monta un archivo de configuración personalizado para Nginx
+      - ./web:/usr/share/nginx/html  # Contenido estático de tu aplicación
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Configuración de Nginx
     networks:
       - app_network
     depends_on:
       - api  # Asegura que el servicio web depende del servicio api
-
-  # Servicio de la API
-  api:
-    image: api_image  # Usamos la imagen recién construida
-    container_name: api
-    ports:
-      - "5000:5000"  # Mapea el puerto de la API
-    environment:
-      - API_ENV=production  # Configura las variables de entorno necesarias
-    networks:
-      - app_network
 
 networks:
   app_network:
