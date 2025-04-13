@@ -17,9 +17,7 @@ services:
 
   # Servicio de la API
   api:
-    build:
-      context: .  # Ruta al Dockerfile de tu API (generalmente el directorio raíz del proyecto)
-      dockerfile: Dockerfile  # Si el nombre del Dockerfile no es el predeterminado, especifica el nombre
+    image: api_image  # Usamos la imagen recién construida
     container_name: api
     ports:
       - "5000:5000"  # Mapea el puerto de la API
