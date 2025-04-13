@@ -23,7 +23,14 @@ jobs:
       run: |
         ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
 
-
     - name: Deploy via SSH
       run: |
-        ssh -i ~/.ssh/id_rsa root@149.50.146.48 "cd /home/root/mis-proyectos/mi-app && git pull && docker-compose up -d"
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@149.50.146.48 "
+          # Verificar si el directorio existe, si no, crear el directorio
+          if [ ! -d '/home/root/mis-proyectos/mi-app' ]; then
+            mkdir -p /home/root/mis-proyectos/mi-app;
+            cd /home/root/mis-proyectos/mi-app;
+            # Clonar el repositorio si no existe nada
+            git clone https://github.com/tuusuario/tu-repo.git .;
+          fi
+          cd /home/root/mis-proyectos/mi-app && git pull && docker-compose up -d"
