@@ -23,6 +23,7 @@ jobs:
       run: |
         ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
 
+
     - name: Deploy via SSH
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@149.50.146.48 "
