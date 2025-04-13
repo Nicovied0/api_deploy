@@ -1,0 +1,28 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+    - name: Add known hosts
+      run: |
+        ssh-keyscan -H tu.vps.ip >> ~/.ssh/known_hosts
+
+    - name: Deploy via SSH
+      run: |
+        ssh -i ~/.ssh/id_rsa usuario@tu.vps.ip "cd /ruta/proyecto && git pull && docker-compose up -d"
