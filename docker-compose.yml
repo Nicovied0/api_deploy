@@ -4,7 +4,7 @@ services:
   # Servicio de la API
   api:
     build:
-      context: ./api  # El contexto de construcción es el directorio ./api
+      context: .  # Usa el directorio actual como contexto para construir la imagen
     container_name: api
     ports:
       - "5000:5000"
