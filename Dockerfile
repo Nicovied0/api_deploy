@@ -1,14 +1,14 @@
-# Usar una imagen base de OpenJDK (Java 11, por ejemplo)
+# Usar una imagen base con OpenJDK 17
 FROM openjdk:17-jre-slim
 
-# Establecer el directorio de trabajo
+# Establecer el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copiar el archivo JAR al contenedor
-COPY target/my-api.jar /app/my-api.jar
+# Copiar el archivo JAR generado en el contenedor
+COPY target/demo-0.0.1-SNAPSHOT.jar /app/demo.jar
 
-# Exponer el puerto en el que Spring Boot corre (usualmente 8080)
+# Exponer el puerto que la aplicación usará
 EXPOSE 8080
 
-# Comando para ejecutar el archivo JAR
-CMD ["java", "-jar", "my-api.jar"]
+# Comando para ejecutar la aplicación
+CMD ["java", "-jar", "demo.jar"]
