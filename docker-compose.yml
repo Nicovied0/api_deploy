@@ -5,7 +5,7 @@ services:
     build: .
     container_name: springboot-api
     ports:
-      - "8080:8080"  # Expone el puerto 8080 del contenedor al puerto 8080 de la máquina host (VPS)
+      - "5000:8080"  # Aquí exponemos el puerto 8080 del contenedor como 5000 en el host
     networks:
       - app_network
 
