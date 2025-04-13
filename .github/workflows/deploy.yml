@@ -21,7 +21,8 @@ jobs:
 
     - name: Add known hosts
       run: |
-        ssh-keyscan -H 149.50.146.48 >> ~/.ssh/known_hosts
+        ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
+
 
     - name: Deploy via SSH
       run: |
