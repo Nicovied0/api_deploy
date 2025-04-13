@@ -26,11 +26,28 @@ jobs:
     - name: Deploy via SSH
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "
-          # Verificar si el directorio existe, si no, crear el directorio
+          # Verificar si el directorio 'mis-proyectos' existe, si no, crear el directorio
+          if [ ! -d '/home/root/mis-proyectos' ]; then
+            mkdir -p /home/root/mis-proyectos;
+          fi
+
+          # Verificar si el directorio 'mi-app' existe, si no, crear el directorio y clonar el repositorio
           if [ ! -d '/home/root/mis-proyectos/mi-app' ]; then
             mkdir -p /home/root/mis-proyectos/mi-app;
             cd /home/root/mis-proyectos/mi-app;
             # Clonar el repositorio si no existe nada
             git clone https://github.com/Nicovied0/api_deploy.git .;
           fi
-          cd /home/root/mis-proyectos/mi-app && git pull && docker-compose up -d"
+
+          # Cambiar al directorio del repositorio
+          cd /home/root/mis-proyectos/mi-app;
+
+          # Verificar si docker-compose.yml existe
+          if [ -f 'docker-compose.yml' ]; then
+            # Si existe, ejecutar docker-compose
+            docker-compose up -d;
+          else
+            # Si no existe, mostrar error
+            echo 'docker-compose.yml no encontrado en el directorio actual.';
+            exit 1;
+          fi"
