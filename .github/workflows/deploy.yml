@@ -13,18 +13,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17 (Adoptium)
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'adoptium'  # Usar 'adoptium' en lugar de 'adoptopenjdk'
-        java-package: jdk
-        check-latest: false
-        
-    - name: Build project with Maven
-      run: |
-        mvn clean package
-
     - name: Set up SSH key
       run: |
         mkdir -p ~/.ssh
@@ -38,21 +26,9 @@ jobs:
     - name: Deploy via SSH
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "
-          # Cambiar al directorio de tu aplicación
           cd /home/root/mis-proyectos/mi-app;
-
-          # Detener los contenedores existentes
           docker-compose down;
-
-          # Obtener la última versión del repositorio
           git pull origin main;
-
-          # Copiar el archivo JAR al servidor
-          cp /path/to/your/project/target/demo-0.0.1-SNAPSHOT.jar /home/root/mis-proyectos/mi-app/target/;
-
-          # Construir las imágenes de Docker localmente
           docker-compose build;
-
-          # Levantar los contenedores
           docker-compose up -d;
         "
