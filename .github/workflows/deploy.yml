@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - main
+      - main  # Ejecutar cuando se haga un push a la rama principal
 
 jobs:
   deploy:
@@ -23,44 +23,35 @@ jobs:
       run: |
         ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
 
+    - name: Build and Push Docker Images
+      run: |
+        # Construir y etiquetar la imagen de la API
+        docker build -t myapp:latest -f ./api/Dockerfile ./api
+        docker tag myapp:latest myusername/myapp:latest  # Etiqueta para Docker Hub
+
+        # Construir y etiquetar la imagen de Nginx
+        docker build -t myapp-web:latest -f ./Dockerfile ./web
+        docker tag myapp-web:latest myusername/myapp-web:latest  # Etiqueta para Docker Hub
+
+        # Hacer login en Docker Hub
+        echo "${{ secrets.DOCKER_USERNAME }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+        # Subir las imágenes a Docker Hub
+        docker push myusername/myapp:latest
+        docker push myusername/myapp-web:latest
+
     - name: Deploy via SSH
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "
-          # Verificar si el directorio 'mis-proyectos' existe, si no, crear el directorio
-          echo 'Verificando si el directorio mis-proyectos existe';
-          if [ ! -d '/home/root/mis-proyectos' ]; then
-            echo 'Creando directorio mis-proyectos';
-            mkdir -p /home/root/mis-proyectos;
-          fi
-
-          # Verificar si el directorio 'mi-app' existe, si no, crear el directorio y clonar el repositorio
-          echo 'Verificando si el directorio mi-app existe';
-          if [ ! -d '/home/root/mis-proyectos/mi-app' ]; then
-            echo 'Creando directorio mi-app y clonando repositorio';
-            mkdir -p /home/root/mis-proyectos/mi-app;
-            cd /home/root/mis-proyectos/mi-app;
-            git clone https://github.com/Nicovied0/api_deploy.git .;
-          fi
-          ls -la /home/root/mis-proyectos/mi-app
-
-          # Cambiar al directorio del repositorio
+          # Cambiar al directorio de tu aplicación
           cd /home/root/mis-proyectos/mi-app;
 
-          # Construir la imagen de la API
-          echo 'Construyendo la imagen de la API';
-          docker build -t api_image ./api;
+          # Detener los contenedores existentes
+          docker-compose down;
 
-          # Verificar si docker-compose.yml existe
-          echo 'Verificando si docker-compose.yml existe';
-          if [ -f 'docker-compose.yml' ]; then
-            echo 'docker-compose.yml encontrado, ejecutando docker-compose';
-            docker-compose up -d;
-          else
-            echo 'docker-compose.yml no encontrado en el directorio actual.';
-            exit 1;
-          fi
+          # Obtener la última versión del repositorio
+          git pull origin main;
 
-          # Verificar si los contenedores están corriendo
-          echo 'Verificando si los contenedores están corriendo';
-          docker ps;
+          # Construir y ejecutar los contenedores
+          docker-compose up -d;
         "
