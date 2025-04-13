@@ -23,23 +23,6 @@ jobs:
       run: |
         ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
 
-    - name: Build and Push Docker Images
-      run: |
-        # Construir y etiquetar la imagen de la API
-        docker build -t myapp:latest -f ./api/Dockerfile ./api
-        docker tag myapp:latest myusername/myapp:latest  # Etiqueta para Docker Hub
-
-        # Construir y etiquetar la imagen de Nginx
-        docker build -t myapp-web:latest -f ./Dockerfile ./web
-        docker tag myapp-web:latest myusername/myapp-web:latest  # Etiqueta para Docker Hub
-
-        # Hacer login en Docker Hub
-        echo "${{ secrets.DOCKER_USERNAME }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-        # Subir las imágenes a Docker Hub
-        docker push myusername/myapp:latest
-        docker push myusername/myapp-web:latest
-
     - name: Deploy via SSH
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "
@@ -52,6 +35,9 @@ jobs:
           # Obtener la última versión del repositorio
           git pull origin main;
 
-          # Construir y ejecutar los contenedores
+          # Construir las imágenes de Docker localmente
+          docker-compose build;
+
+          # Levantar los contenedores
           docker-compose up -d;
         "
