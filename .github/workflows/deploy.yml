@@ -17,7 +17,10 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-
+        distribution: 'adoptopenjdk'  # Puedes usar 'adoptopenjdk' o 'zulu'
+        java-package: jdk
+        check-latest: false
+        
     - name: Build project with Maven
       run: |
         mvn clean package
