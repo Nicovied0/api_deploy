@@ -23,10 +23,9 @@ jobs:
       run: |
         ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
 
-
     - name: Deploy via SSH
       run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@149.50.146.48 "
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "
           # Verificar si el directorio existe, si no, crear el directorio
           if [ ! -d '/home/root/mis-proyectos/mi-app' ]; then
             mkdir -p /home/root/mis-proyectos/mi-app;
