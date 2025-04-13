@@ -13,11 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17 (OpenJDK)
+    - name: Set up JDK 17 (Adoptium)
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-        distribution: 'adoptopenjdk'  # Puedes usar 'adoptopenjdk' o 'zulu'
+        distribution: 'adoptium'  # Usar 'adoptium' en lugar de 'adoptopenjdk'
         java-package: jdk
         check-latest: false
         
