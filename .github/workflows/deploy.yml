@@ -32,6 +32,6 @@ jobs:
             mkdir -p /home/root/mis-proyectos/mi-app;
             cd /home/root/mis-proyectos/mi-app;
             # Clonar el repositorio si no existe nada
-            git clone https://github.com/tuusuario/tu-repo.git .;
+            git clone https://github.com/Nicovied0/api_deploy.git .;
           fi
           cd /home/root/mis-proyectos/mi-app && git pull && docker-compose up -d"
