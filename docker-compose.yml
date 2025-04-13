@@ -1,8 +1,8 @@
-version: '3'
 services:
   web:
     image: nginx:latest
     ports:
       - "80:80"
     volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf  # Ejemplo si tienes configuración NGINX
+      - ./html:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf  # Asegúrate de que default.conf sea un archivo, no un directorio
