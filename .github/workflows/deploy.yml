@@ -46,6 +46,10 @@ jobs:
           # Cambiar al directorio del repositorio
           cd /home/root/mis-proyectos/mi-app;
 
+          # Construir la imagen de la API
+          echo 'Construyendo la imagen de la API';
+          docker build -t api_image ./api;
+
           # Verificar si docker-compose.yml existe
           echo 'Verificando si docker-compose.yml existe';
           if [ -f 'docker-compose.yml' ]; then
@@ -55,4 +59,8 @@ jobs:
             echo 'docker-compose.yml no encontrado en el directorio actual.';
             exit 1;
           fi
+
+          # Verificar si los contenedores están corriendo
+          echo 'Verificando si los contenedores están corriendo';
+          docker ps;
         "
