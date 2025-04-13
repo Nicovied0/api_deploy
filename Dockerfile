@@ -1,17 +1,14 @@
-# Usar una imagen base de Python
-FROM python:3.9-slim
+# Usar una imagen base de OpenJDK (Java 11, por ejemplo)
+FROM openjdk:17-jre-slim
 
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar los archivos de la API al contenedor
-COPY . .
+# Copiar el archivo JAR al contenedor
+COPY target/my-api.jar /app/my-api.jar
 
-# Instalar dependencias
-RUN pip install -r requirements.txt
+# Exponer el puerto en el que Spring Boot corre (usualmente 8080)
+EXPOSE 8080
 
-# Exponer el puerto que la API usará
-EXPOSE 5000
-
-# Comando para iniciar la API
-CMD ["python", "app.py"]
+# Comando para ejecutar el archivo JAR
+CMD ["java", "-jar", "my-api.jar"]
