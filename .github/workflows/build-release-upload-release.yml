@@ -32,19 +32,19 @@ jobs:
         with:
           github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
           default_bump: minor
-          tag_prefix: 'v'
-          pre_release: false
+          tag_prefix: v
+          release_branches: release
 
       - name: Rename JAR with version
         run: |
-          mv target/api.jar target/api-${{ steps.tag.outputs.new_tag }}.jar
+          mv target/api.jar target/api-${{ steps.tag.outputs.new_version }}.jar
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.new_tag }}
-          name: Release ${{ steps.tag.outputs.new_tag }}
-          files: target/api-${{ steps.tag.outputs.new_tag }}.jar
+          tag_name: v${{ steps.tag.outputs.new_version }}
+          name: Release v${{ steps.tag.outputs.new_version }}
+          files: target/api-${{ steps.tag.outputs.new_version }}.jar
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 
@@ -68,4 +68,4 @@ jobs:
 
       - name: Upload new .jar to test
         run: |
-          scp -P 5680 -i ~/.ssh/id_rsa target/api-${{ steps.tag.outputs.new_tag }}.jar root@149.50.146.48:/home/root/mis-proyectos/mi-app/test/
+          scp -P 5680 -i ~/.ssh/id_rsa target/api-${{ steps.tag.outputs.new_version }}.jar root@149.50.146.48:/home/root/mis-proyectos/mi-app/test/
