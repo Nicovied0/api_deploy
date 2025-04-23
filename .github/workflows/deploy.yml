@@ -1,34 +1,34 @@
-name: Deploy to VPS
+# name: Deploy to VPS
 
-on:
-  push:
-    branches:
-      - main  # Ejecutar cuando se haga un push a la rama principal
+# on:
+#   push:
+#     branches:
+#       - main  # Ejecutar cuando se haga un push a la rama principal
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
 
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+#     - name: Set up SSH key
+#       run: |
+#         mkdir -p ~/.ssh
+#         echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+#         chmod 600 ~/.ssh/id_rsa
 
-    - name: Add known hosts
-      run: |
-        ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
+#     - name: Add known hosts
+#       run: |
+#         ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
 
-    - name: Deploy via SSH
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "
-          cd /home/root/mis-proyectos/mi-app;
-          docker-compose down;
-          git pull origin main;
-          docker-compose build;
-          docker-compose up -d;
-        "
+#     - name: Deploy via SSH
+#       run: |
+#         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "
+#           cd /home/root/mis-proyectos/mi-app;
+#           docker-compose down;
+#           git pull origin main;
+#           docker-compose build;
+#           docker-compose up -d;
+#         "
