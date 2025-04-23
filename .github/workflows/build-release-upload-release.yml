@@ -38,7 +38,7 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.new_tag }}
           name: Release ${{ steps.tag.outputs.new_tag }}
-          files: target/api.jar
+          files: target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 
@@ -56,14 +56,14 @@ jobs:
         run: |
           ssh-keyscan -p 5680 -H 149.50.146.48 >> ~/.ssh/known_hosts
 
-      - name: Ensure test directory exists
+      - name: Ensure prod directory exists
         run: |
           ssh -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "mkdir -p /home/root/mis-proyectos/mi-app/test"
 
-      - name: Remove old JAR from test
+      - name: Remove old JAR from prod
         run: |
           ssh -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "rm -f /home/root/mis-proyectos/mi-app/test/*.jar"
 
-      - name: Upload new .jar to test
+      - name: Upload new .jar to prod
         run: |
           scp -P 5680 -i ~/.ssh/id_rsa target/api-${{ steps.tag.outputs.new_tag }}.jar root@149.50.146.48:/home/root/mis-proyectos/mi-app/test/
