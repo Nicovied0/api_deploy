@@ -1,4 +1,4 @@
-name: Build, Release & Upload to VPS (Prod)
+name: Build, Release & Upload to VPS (Test)
 
 on:
   push:
