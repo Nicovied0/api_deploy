@@ -1,42 +1,37 @@
-name: Build Java Spring Boot Project
+name: Build & Release Java App
 
 on:
-  workflow_dispatch: # Permite ejecutar este workflow manualmente
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
-      # Paso 1: Clonar el repositorio
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Paso 2: Configurar JDK
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # Paso 3: Verificar archivos
-      - name: List files in repository root
-        run: ls -la
-
-      # Paso 4: Construir el proyecto con Maven
       - name: Build with Maven
         run: mvn clean package --no-transfer-progress
 
-      # Paso 5: Subir artefacto generado
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
+      - name: Generate new version tag
+        id: tag
+        uses: mathieudutour/github-tag-action@v6.1
         with:
-          name: springboot-app
-          path: target/*.jar
-          retention-days: 90
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch # puedes usar: patch, minor, major
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.new_tag }}
+          name: Release ${{ steps.tag.outputs.new_tag }}
+          files: target/*.jar
