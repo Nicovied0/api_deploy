@@ -44,7 +44,7 @@ jobs:
 
       - name: Rename JAR with version
         run: |
-          mv target/*.jar target/api-${{ steps.tag.outputs.new_tag }}.jar
+          mv target/api.jar target/api-${{ steps.tag.outputs.new_tag }}.jar
 
       - name: Set up SSH key
         run: |
