@@ -69,3 +69,7 @@ jobs:
       - name: Upload new .jar to test
         run: |
           scp -P 5680 -i ~/.ssh/id_rsa target/api-${{ steps.tag.outputs.new_version }}.jar root@149.50.146.48:/home/root/mis-proyectos/mi-app/test/
+
+      - name: Restart API service on VPS
+        run: |
+          ssh -i ~/.ssh/id_rsa -p 5680 root@149.50.146.48 "systemctl restart api-test"
